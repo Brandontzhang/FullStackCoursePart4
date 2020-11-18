@@ -1,0 +1,9 @@
+POST http://localhost:3001/api/blogs
+content-type: application/json
+
+{
+    "title": "Genshin Impact",
+    "author": "Jenn",
+    "url": "www.writer.com",
+    "likes": "1000"
+}
