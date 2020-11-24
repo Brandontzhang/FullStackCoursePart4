@@ -8,17 +8,34 @@ blogsRouter.get('/', async (request, response) => {
 
 })
 
-blogsRouter.post('/', (request, response) => {
-  const newBlog = new blog(request.body)
+blogsRouter.post('/', async (request, response) => {
+  let inputBlog = request.body
 
-  // const result = await newBlog.save()
-  // return response.status(201).json(result)
+  if (!inputBlog.title || ! inputBlog.url) {
+    return response.status(400).end()
+  }
 
-  newBlog
-    .save()
-    .then(result => {
-      response.status(201).json(result)
-    })
+  if (!inputBlog.likes) {
+    inputBlog = {
+      ...inputBlog, 
+      likes: 0
+    }
+  }
+  const newBlog = new blog(inputBlog)
+
+  const result = await newBlog.save()
+  return response.status(201).json(result)
+
+})
+
+blogsRouter.delete('/:id', async (request, response, next) => {
+  await blog.findByIdAndDelete(request.params.id)
+  response.status(204).end()
+})
+
+blogsRouter.put('/:id', async (request, response, next) => {
+  await blog.findByIdAndUpdate(request.params.id, request.body)
+  response.status(204).end()
 })
 
 module.exports = blogsRouter
