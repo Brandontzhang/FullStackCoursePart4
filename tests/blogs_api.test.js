@@ -1,7 +1,6 @@
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
-const blog = require('../models/blog')
 const api = supertest(app)
 const Blog = require('../models/blog')
 const helper = require('./test_helper')
@@ -37,22 +36,16 @@ test('there is a specific blog', async () => {
 })
 
 test('Creating a blog increases the size', async () => {
-    // this variable isn't working??
-    const newBlog = new Blog({
+    const newBlog = {
         title: "Blog title 2",
         author: "Blog author 2",
         url: "Blog url 2",
         likes: 12
-    })
+    }
 
     await api
         .post('/api/blogs')
-        .send({
-            title: "Blog title 2",
-            author: "Blog author 2",
-            url: "Blog url 2",
-            likes: 12
-        })
+        .send(newBlog)
         .expect(201)
         .expect('Content-type', /application\/json/)
 
